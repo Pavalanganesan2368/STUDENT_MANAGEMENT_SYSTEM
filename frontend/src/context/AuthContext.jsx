@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       try {
-        const { data } = await api.get('/auth/me');
+        const { data } = await api.get('https://student-management-system-backend-pdb4.onrender.com/auth/me');
         setUser(data);
       } catch (error) {
         setUser(null);
