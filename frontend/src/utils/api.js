@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api', // Proxy handles request to localhost:5000
+  baseURL: 'https://student-management-system-backend-pdb4.onrender.com', // Proxy handles request to onrender
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
