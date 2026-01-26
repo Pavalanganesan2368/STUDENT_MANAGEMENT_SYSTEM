@@ -20,7 +20,7 @@ const StudentProfile = () => {
         // If no ID is provided (e.g., from "/profile" link), 
         // fetch the student profile using the current user's email
         if (!id && user) {
-          const { data: studentsData } = await api.get(`https://student-management-system-backend-pdb4.onrender.com/students?search=${user.email}`);
+          const { data: studentsData } = await api.get(`/students?search=${user.email}`);
           if (studentsData.students && studentsData.students.length > 0) {
             setStudent(studentsData.students[0]);
             setLoading(false);
