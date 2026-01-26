@@ -10,7 +10,7 @@ const StudentList = () => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const { data } = await api.get('https://student-management-system-backend-pdb4.onrender.com/students');
+                const { data } = await api.get('/students');
                 setStudents(data.students);
             } catch (error) {
                 console.error("Error fetching students", error);
