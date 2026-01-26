@@ -27,7 +27,7 @@ const StudentForm = () => {
         if (isEditMode) {
             const fetchStudent = async () => {
                 try {
-                    const { data } = await api.get(`https://student-management-system-backend-pdb4.onrender.com/students/${id}`);
+                    const { data } = await api.get(`/students/${id}`);
                     setFormData({
                         ...data,
                         userId: data.studentId, // Map backend studentId to form userId
