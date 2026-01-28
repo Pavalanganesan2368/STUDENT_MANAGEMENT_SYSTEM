@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       try {
-        const { data } = await api.get('https://student-management-system-backend-pdb4.onrender.com/auth/me');
+        const { data } = await api.get('auth/me');
         setUser(data);
       } catch (error) {
         setUser(null);
@@ -23,15 +23,15 @@ export const AuthProvider = ({ children }) => {
 
     const token = localStorage.getItem('accessToken');
     if (token) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        checkUserLoggedIn();
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      checkUserLoggedIn();
     } else {
-        setLoading(false);
+      setLoading(false);
     }
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await api.post('https://student-management-system-backend-pdb4.onrender.com/auth/login', { email, password });
+    const { data } = await api.post('auth/login', { email, password });
     localStorage.setItem('accessToken', data.accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
     setUser(data);
@@ -39,18 +39,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-      const { data } = await api.post('https://student-management-system-backend-pdb4.onrender.com/auth/register', userData);
-      localStorage.setItem('accessToken', data.accessToken);
-      api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
-      setUser(data);
-      return data;
+    const { data } = await api.post('auth/register', userData);
+    localStorage.setItem('accessToken', data.accessToken);
+    api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
+    setUser(data);
+    return data;
   }
 
   const logout = async () => {
     try {
-        await api.post('https://student-management-system-backend-pdb4.onrender.com/auth/logout');
-    } catch(err) {
-        console.error(err);
+      await api.post('auth/logout');
+    } catch (err) {
+      console.error(err);
     }
     localStorage.removeItem('accessToken');
     delete api.defaults.headers.common['Authorization'];
