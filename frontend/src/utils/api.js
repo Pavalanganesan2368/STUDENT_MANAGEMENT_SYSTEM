@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_KEY, // Proxy handles request to onrender
+  baseURL: import.meta.env.VITE_API_KEY || '/api', // Use env var or relative path
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
