@@ -28,7 +28,7 @@ Render can host both the frontend and backend together if the backend is configu
     *   `PORT`: `10000` (Render's default)
     *   `JWT_SECRET`: (A random secure string)
     *   `JWT_REFRESH_SECRET`: (Another random secure string)
-    *   `CLIENT_URL`: `https://student-management-backend-sufn.onrender.com`
+    *   `CLIENT_URL`: (Backend_URL)
 
 ## 3. Alternative: Deploy Frontend Separately
 
