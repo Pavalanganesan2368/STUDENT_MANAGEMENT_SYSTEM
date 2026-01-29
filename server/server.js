@@ -18,11 +18,9 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: "https://student-management-system-frontend-357j.onrender.com",
+    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : "http://localhost:5173",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 // Rate limiting
@@ -40,8 +38,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes (to be imported)
-app.use("/auth", require("./routes/authRoutes"));
-app.use("/students", require("./routes/studentRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/students", require("./routes/studentRoutes"));
 
 const path = require("path");
 
