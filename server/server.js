@@ -5,88 +5,73 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const rateLimit = require("express-rate-limit");
-const path = require("path");
 
+// Load env vars
 dotenv.config();
+
+// Connect to database
 connectDB();
 
 const app = express();
 
-/* =========================
-   CORS (MUST BE FIRST)
-========================= */
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://student-management-system-frontend-357j.onrender.com"
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow REST tools like Postman
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-// ✅ VERY IMPORTANT: Preflight support
-app.options("*", cors());
-
-/* =========================
-   Security & Parsers
-========================= */
+// Security Middleware
 app.use(helmet());
-app.use(express.json());
-app.use(cookieParser());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
-/* =========================
-   Rate Limiting
-========================= */
+// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
 });
+
 app.use("/api", limiter);
 
-/* =========================
-   Routes
-========================= */
+// Body parser
+app.use(express.json());
+app.use(cookieParser());
+
+// Routes (to be imported)
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/students", require("./routes/studentRoutes"));
 
-/* =========================
-   Production Frontend
-========================= */
+const path = require("path");
+
+const PORT = process.env.PORT || 5000;
+
+// Serve static assets in production
 if (process.env.NODE_ENV === "production") {
+  // Set build folder
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  app.get("*", (req, res) => {
+  app.use((req, res) =>
     res.sendFile(
-      path.resolve(__dirname, "../frontend/dist/index.html")
-    );
+      path.resolve(__dirname, "..", "frontend", "dist", "index.html"),
+    ),
+  );
+} else {
+  // Root route for development
+  app.get("/", (req, res) => {
+    res.send("Student Management System API is running...");
   });
 }
 
-/* =========================
-   Error Handler
-========================= */
+// Error handling middleware
 app.use((err, req, res, next) => {
-  res.status(500).json({
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  res.status(statusCode);
+  res.json({
     message: err.message,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 });
 
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`),
 );
