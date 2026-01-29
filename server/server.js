@@ -38,7 +38,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes (to be imported)
-app.use("/api", require("./routes/authRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/students", require("./routes/studentRoutes"));
 
 const path = require("path");
