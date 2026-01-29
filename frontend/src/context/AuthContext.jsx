@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       try {
-        const { data } = await api.get('auth/me');
+        const { data } = await api.get('/auth/me');
         setUser(data);
       } catch (error) {
         setUser(null);
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await api.post('auth/login', { email, password });
+    const { data } = await api.post('/auth/login', { email, password });
     localStorage.setItem('accessToken', data.accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
     setUser(data);
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-    const { data } = await api.post('auth/register', userData);
+    const { data } = await api.post('/auth/register', userData);
     localStorage.setItem('accessToken', data.accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
     setUser(data);
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.post('auth/logout');
+      await api.post('/auth/logout');
     } catch (err) {
       console.error(err);
     }
